@@ -22,7 +22,7 @@ class _TodoTilesState extends State<TodoTiles> {
   final todoController = TextEditingController();
   final _focusNode = FocusNode();
   bool isTextLinedThrough = false;
-  int selectedIndex = -1;
+  int selectedIndex = 0;
 
   void addTodoToList() {
     setState(() {

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:todo_list/list.dart';
 import 'package:todo_list/todo_tiles.dart';
 
@@ -13,6 +14,47 @@ class _ToDoHomePageState extends State<ToDoHomePage> {
   final todoController = TextEditingController();
   final _focusNode = FocusNode();
 
+  @override
+  void initState() {
+    super.initState();
+    loadTodoList();
+  }
+
+  Future<void> loadTodoList() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      toDoList = prefs.getStringList('toDoList') ?? [];
+    });
+  }
+
+  Future<void> addTodoToListv2() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      if (todoController.text.isEmpty) {
+        ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text("Input can not be empty")));
+      } else {
+        toDoList = (prefs.getStringList('toDoList') ?? []);
+        toDoList.add(todoController.text);
+        prefs.setStringList('toDoList', toDoList);
+        _focusNode.unfocus();
+      }
+    });
+    todoController.clear();
+  }
+
+  Future<void> dropTodoFromListv2(int index) async {
+          final prefs = await SharedPreferences.getInstance();
+
+    setState(() {
+    print(index);
+    print(toDoList);
+    toDoList.removeAt(index);
+    prefs.setStringList('toDoList', toDoList);
+    });
+    
+  }
+
   void addTodoToList() {
     setState(() {
       if (todoController.text.isEmpty) {
@@ -25,7 +67,7 @@ class _ToDoHomePageState extends State<ToDoHomePage> {
     });
     todoController.clear();
   }
-  
+
   void dropTodoFromList(int index) {
     setState(() {
       print(index);
@@ -70,7 +112,7 @@ class _ToDoHomePageState extends State<ToDoHomePage> {
                       style: OutlinedButton.styleFrom(
                           shape: const RoundedRectangleBorder()),
                       onPressed: () {
-                        addTodoToList();
+                        addTodoToListv2();
                       },
                       child: const Text("Add")),
                 )
@@ -86,9 +128,14 @@ class _ToDoHomePageState extends State<ToDoHomePage> {
             child: ListView.builder(
               itemCount: toDoList.length,
               itemBuilder: (context, index) {
-              String toDoItem = toDoList[index];
+                String toDoItem = toDoList[index];
 
-                return TodoTiles(index: index, label: todoController.text, toDoItem: toDoItem, dropTodoFromList: dropTodoFromList,);
+                return TodoTiles(
+                  index: index,
+                  label: todoController.text,
+                  toDoItem: toDoItem,
+                  dropTodoFromList: dropTodoFromListv2,
+                );
               },
               // onReorder: (oldIndex, newIndex) {
               //   setState(() {
