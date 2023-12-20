@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:todo_list/list.dart';
+import 'package:todo_list/todo_tiles.dart';
 
 class ToDoHomePage extends StatefulWidget {
   const ToDoHomePage({super.key});
@@ -24,19 +25,12 @@ class _ToDoHomePageState extends State<ToDoHomePage> {
     });
     todoController.clear();
   }
-
+  
   void dropTodoFromList(int index) {
     setState(() {
+      print(index);
       toDoList.removeAt(index);
     });
-  }
-
-  @override
-  void dispose() {
-    // Clean up the controller when the widget is removed from the
-    // widget tree.
-    todoController.dispose();
-    super.dispose();
   }
 
   @override
@@ -86,44 +80,28 @@ class _ToDoHomePageState extends State<ToDoHomePage> {
           const SizedBox(
             height: 50,
           ),
+
+          // *** LISTVIEW
           Expanded(
             child: ListView.builder(
               itemCount: toDoList.length,
               itemBuilder: (context, index) {
-                String toDoItem = toDoList[index];
-                Color oddItemColor =
-                    Theme.of(context).colorScheme.inversePrimary;
-                Color evenItemColor = Theme.of(context).colorScheme.onSecondary;
-                return Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(20),
-                      color: index.isOdd ? oddItemColor : evenItemColor,
-                    ),
-                    padding: const EdgeInsets.only(
-                        left: 8, top: 8, bottom: 8, right: 0),
-                    child: Row(
-                      children: [
-                        Expanded(
-                          child: Text(toDoItem),
-                        ),
-                        IconButton(
-                          icon: const Icon(
-                            Icons.delete,
-                            color: Colors.red,
-                          ),
-                          onPressed: () {
-                            dropTodoFromList(index);
-                          },
-                        ),
-                      ],
-                    ),
-                  ),
-                );
+              String toDoItem = toDoList[index];
+
+                return TodoTiles(index: index, label: todoController.text, toDoItem: toDoItem, dropTodoFromList: dropTodoFromList,);
               },
+              // onReorder: (oldIndex, newIndex) {
+              //   setState(() {
+              //     if (oldIndex < newIndex) {
+              //       newIndex -= 1;
+              //     }
+              //     final String item = toDoList.removeAt(oldIndex);
+              //     toDoList.insert(newIndex, item);
+              //   });
+              // },
             ),
           )
+          // *** LISTVIEW
         ]),
       ),
     );

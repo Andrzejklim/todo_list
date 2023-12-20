@@ -12,11 +12,11 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'My Todo List',
+      title: 'app',
       theme: ThemeData(
           colorScheme: ColorScheme.fromSeed(
               seedColor: Colors.deepPurple,
-              onSecondary: Color.fromARGB(255, 157, 113, 245)),
+              onSecondary: const Color.fromARGB(255, 157, 113, 245)),
           useMaterial3: true,
           textTheme: const TextTheme(
               titleLarge:
