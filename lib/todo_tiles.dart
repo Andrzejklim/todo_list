@@ -83,27 +83,38 @@ class _TodoTilesState extends State<TodoTiles> {
             IconButton(
               onPressed: () {
                 showDialog(
+                  barrierDismissible: false,
                   context: context,
-                  builder: (_) => AlertDialog(
-                    title: const Text("Make some modifications: "),
-                    content: TextField(
-                        controller: todoController,
-                        decoration:
-                            const InputDecoration(hintText: "add change")),
-                    actions: <Widget>[
-                      TextButton(
-                        onPressed: () => Navigator.pop(context, 'Cancel'),
-                        child: const Text('Cancel'),
-                      ),
-                      TextButton(
-                        onPressed: () {
-                          widget.modifyTodoList(
-                              widget.index, todoController.text);
-                          Navigator.pop(context, 'OK');
-                        },
-                        child: const Text('OK'),
-                      ),
-                    ],
+                  builder: (context) => Scaffold(
+                    backgroundColor: Colors.transparent,
+                    body: AlertDialog(
+                      title: const Text("Make some modifications: "),
+                      content: TextField(
+                          controller: todoController,
+                          decoration:
+                              const InputDecoration(hintText: "add change")),
+                      actions: <Widget>[
+                        TextButton(
+                          onPressed: () => Navigator.pop(context, 'Cancel'),
+                          child: const Text('Cancel'),
+                        ),
+                        TextButton(
+                          onPressed: () {
+                            if (todoController.text.isEmpty) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                      content: Text("Input can not be empty")));
+                            } else {
+                              widget.modifyTodoList(
+                                  widget.index, todoController.text);
+                              Navigator.pop(context, 'OK');
+                              todoController.clear();
+                            }
+                          },
+                          child: const Text('OK'),
+                        ),
+                      ],
+                    ),
                   ),
                 );
               },
