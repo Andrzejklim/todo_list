@@ -44,15 +44,20 @@ class _ToDoHomePageState extends State<ToDoHomePage> {
   }
 
   Future<void> dropTodoFromListv2(int index) async {
-          final prefs = await SharedPreferences.getInstance();
+    final prefs = await SharedPreferences.getInstance();
 
     setState(() {
-    print(index);
-    print(toDoList);
-    toDoList.removeAt(index);
-    prefs.setStringList('toDoList', toDoList);
+      toDoList.removeAt(index);
+      prefs.setStringList('toDoList', toDoList);
     });
-    
+  }
+
+  Future<void> modifyTodoList(int index, String label) async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      toDoList[index] = label;
+      prefs.setStringList('toDoList', toDoList);
+    });
   }
 
   void addTodoToList() {
@@ -135,6 +140,7 @@ class _ToDoHomePageState extends State<ToDoHomePage> {
                   label: todoController.text,
                   toDoItem: toDoItem,
                   dropTodoFromList: dropTodoFromListv2,
+                  modifyTodoList: modifyTodoList,
                 );
               },
               // onReorder: (oldIndex, newIndex) {
